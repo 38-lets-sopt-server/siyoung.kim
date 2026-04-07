@@ -3,6 +3,7 @@ package org.sopt.controller;
 import org.sopt.dto.request.CreatePostRequest;
 import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
+import org.sopt.exception.PostNotFoundException;
 import org.sopt.service.PostService;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class PostController {
         // TODO: postService.getPost(id) 호출, 예외 발생 시 null 반환
         try {
             return postService.getPost(id);
-        } catch (IllegalArgumentException e) {
-            System.out.println("에러 발생: " + e.getMessage());
+        } catch (PostNotFoundException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -41,8 +42,8 @@ public class PostController {
         // TODO: postService.updatePost() 호출, 예외 발생 시 에러 메시지 출력
         try {
             postService.updatePost(id, newTitle, newContent);
-        } catch (IllegalArgumentException e) {
-            System.out.println("에러 발생: " + e.getMessage());
+        } catch (PostNotFoundException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -51,8 +52,8 @@ public class PostController {
         // TODO: postService.deletePost() 호출, 예외 발생 시 에러 메시지 출력
         try {
             postService.deletePost(id);
-        } catch (IllegalArgumentException e) {
-            System.out.println("에러 발생: " + e.getMessage());
+        } catch (PostNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
