@@ -60,7 +60,6 @@ public class PostService {
         PostValidator.validateContent(newContent);
 
         p.update(newTitle, newContent);
-        postRepository.save(p);
     }
 
     // DELETE 📝 과제
