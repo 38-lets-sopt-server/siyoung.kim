@@ -28,22 +28,46 @@ public class PostService {
     // READ - 전체 📝 과제
     public List<PostResponse> getAllPosts() {
         // TODO
-        return null;
+        List<Post> posts = postRepository.findAll();
+
+        return posts.stream()
+                .map(p -> new PostResponse(p))
+                .toList();
     }
 
     // READ - 단건 📝 과제
     public PostResponse getPost(Long id) {
         // TODO
-        return null;
+        Post p = postRepository.findById(id);
+
+        return new PostResponse(p);
     }
 
     // UPDATE 📝 과제
     public void updatePost(Long id, String newTitle, String newContent) {
         // TODO
+        if(newTitle == null || newTitle.isBlank()) {
+            throw new IllegalArgumentException("제목은 필수입니다!");
+        }
+        if(newTitle.length() > 50) {
+            throw new IllegalArgumentException("제목은 50자 이하여야합니다.");
+        }
+        if(newContent == null || newContent.isBlank()) {
+            throw new IllegalArgumentException("내용은 필수입니다!");
+        }
+
+        Post p = postRepository.findById(id);
+        p.update(newTitle, newContent);
+        postRepository.save(p);
     }
 
     // DELETE 📝 과제
     public void deletePost(Long id) {
         // TODO
+        if(id == null || postRepository.findById(id) == null) {
+            throw new IllegalArgumentException("존재하지 않는 게시글입니다.");
+        }
+
+        postRepository.deleteById(id);
     }
 }
