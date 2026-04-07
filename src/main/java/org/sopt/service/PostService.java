@@ -6,6 +6,7 @@ import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
 import org.sopt.exception.PostNotFoundException;
 import org.sopt.repository.PostRepository;
+import org.sopt.validator.PostValidator;
 
 import java.util.List;
 
@@ -14,12 +15,11 @@ public class PostService {
 
     // CREATE
     public CreatePostResponse createPost(CreatePostRequest request) {
-        if (request.title == null || request.title.isBlank()) {
-            throw new IllegalArgumentException("제목은 필수입니다!");
-        }
-        if (request.content == null || request.content.isBlank()) {
-            throw new IllegalArgumentException("내용은 필수입니다!");
-        }
+
+        PostValidator validator = new PostValidator();
+        validator.validateTitle(request.title);
+        validator.validateContent(request.content);
+
         String createdAt = java.time.LocalDateTime.now().toString();
         Post post = new Post(postRepository.generateId(), request.title, request.content, request.author, createdAt);
         postRepository.save(post);
@@ -55,15 +55,9 @@ public class PostService {
             throw new PostNotFoundException();
         }
 
-        if(newTitle == null || newTitle.isBlank()) {
-            throw new IllegalArgumentException("제목은 필수입니다!");
-        }
-        if(newTitle.length() > 50) {
-            throw new IllegalArgumentException("제목은 50자 이하여야합니다.");
-        }
-        if(newContent == null || newContent.isBlank()) {
-            throw new IllegalArgumentException("내용은 필수입니다!");
-        }
+        PostValidator validator = new PostValidator();
+        validator.validateTitle(newTitle);
+        validator.validateContent(newContent);
 
         Post p = postRepository.findById(id);
         p.update(newTitle, newContent);
