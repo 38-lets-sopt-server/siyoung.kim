@@ -40,6 +40,10 @@ public class PostService {
         // TODO
         Post p = postRepository.findById(id);
 
+        if(p == null) {
+            throw new IllegalArgumentException(id + "번 게시글이 존재하지 않습니다.");
+        }
+
         return new PostResponse(p);
     }
 
@@ -64,10 +68,10 @@ public class PostService {
     // DELETE 📝 과제
     public void deletePost(Long id) {
         // TODO
-        if(id == null || postRepository.findById(id) == null) {
-            throw new IllegalArgumentException("존재하지 않는 게시글입니다.");
-        }
+        boolean isDeleted = postRepository.deleteById(id);
 
-        postRepository.deleteById(id);
+        if(!isDeleted) {
+            throw new IllegalArgumentException(id + "번 게시글이 존재하지 않습니다.");
+        }
     }
 }
