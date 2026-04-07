@@ -16,6 +16,7 @@ public class PostService {
     // CREATE
     public CreatePostResponse createPost(CreatePostRequest request) {
 
+        //PostValidator 도입 -> 서비스 계층에서 유효성 검증 책임 분리
         PostValidator validator = new PostValidator();
         validator.validateTitle(request.title);
         validator.validateContent(request.content);

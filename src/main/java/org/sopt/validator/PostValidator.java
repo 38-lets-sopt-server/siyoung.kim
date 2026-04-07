@@ -1,5 +1,7 @@
 package org.sopt.validator;
 
+// Post의 title과 content에 대한 유효성 검증하는 클래스
+
 public class PostValidator {
 
     public void validateTitle(String title) {
