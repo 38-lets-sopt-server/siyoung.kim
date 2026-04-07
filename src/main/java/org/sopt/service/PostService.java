@@ -17,9 +17,8 @@ public class PostService {
     public CreatePostResponse createPost(CreatePostRequest request) {
 
         //PostValidator 도입 -> 서비스 계층에서 유효성 검증 책임 분리
-        PostValidator validator = new PostValidator();
-        validator.validateTitle(request.title);
-        validator.validateContent(request.content);
+        PostValidator.validateTitle(request.title);
+        PostValidator.validateContent(request.content);
 
         String createdAt = java.time.LocalDateTime.now().toString();
         Post post = new Post(postRepository.generateId(), request.title, request.content, request.author, createdAt);
@@ -52,15 +51,14 @@ public class PostService {
     // UPDATE 📝 과제
     public void updatePost(Long id, String newTitle, String newContent) {
         // TODO
-        if(postRepository.findById(id) == null) {
+        Post p = postRepository.findById(id);
+        if(p == null) {
             throw new PostNotFoundException();
         }
 
-        PostValidator validator = new PostValidator();
-        validator.validateTitle(newTitle);
-        validator.validateContent(newContent);
+        PostValidator.validateTitle(newTitle);
+        PostValidator.validateContent(newContent);
 
-        Post p = postRepository.findById(id);
         p.update(newTitle, newContent);
         postRepository.save(p);
     }

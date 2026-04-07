@@ -4,7 +4,7 @@ package org.sopt.validator;
 
 public class PostValidator {
 
-    public void validateTitle(String title) {
+    public static void validateTitle(String title) {
         if(title == null || title.isBlank()) {
             throw new IllegalArgumentException("제목을 입력하세요.");
         }
@@ -13,7 +13,7 @@ public class PostValidator {
         }
     }
 
-    public void validateContent(String content) {
+    public static void validateContent(String content) {
         if(content == null || content.isBlank()) {
             throw new IllegalArgumentException("내용을 입력해주세요.");
         }
