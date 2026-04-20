@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 커스텀 예외 handler, PostNotFoundException → 404
+    // 커스텀 예외 handler
+    // BaseException 으로 모든 예외 다 잡아서 공통 응답으로 반환할 수 있게 만들기
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ApiResponse<Void>> handleBaseException(BaseException e) {
         return ResponseEntity
