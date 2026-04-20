@@ -3,7 +3,7 @@ package org.sopt.global.code;
 import org.springframework.http.HttpStatus;
 
 public enum SuccessCode {
-    // SUCCESS_OK 로 생성, 업데이트, 삭제 요청 처리(status: 200)
+    // SUCCESS_OK 로 조회, 생성, 업데이트, 삭제 요청 처리(status: 200)
     SUCCESS_OK(HttpStatus.OK, "SUCCESS_01", "요청 성공"),
 
     // status: 201

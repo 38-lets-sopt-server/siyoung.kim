@@ -1,10 +1,13 @@
 package org.sopt.service;
 
+import org.sopt.domain.BoardType;
 import org.sopt.domain.Post;
 import org.sopt.dto.request.CreatePostRequest;
 import org.sopt.dto.request.UpdatePostRequest;
 import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
+import org.sopt.global.code.ErrorCode;
+import org.sopt.global.exception.BaseException;
 import org.sopt.global.exception.PostNotFoundException;
 import org.sopt.repository.PostRepository;
 import org.sopt.validator.PostValidator;
@@ -30,6 +33,11 @@ public class PostService {
         PostValidator.validateTitle(request.title());
         PostValidator.validateContent(request.content());
 
+        // board type 선택안했을 때
+        if(request.boardType() == null) {
+            throw new BaseException(ErrorCode.POST_INVALID_BOARD);
+        }
+
         // 2. Post 도메인 객체 생성
         String createdAt = java.time.LocalDateTime.now().toString();
         Post post = new Post(
@@ -37,7 +45,8 @@ public class PostService {
                 request.title(),
                 request.content(),
                 request.author(),
-                createdAt
+                createdAt,
+                request.boardType()
         );
         // 3. 저장
         postRepository.save(post);
@@ -61,6 +70,15 @@ public class PostService {
         Optional<Post> post = postRepository.findById(id);
         post.orElseThrow(() -> new PostNotFoundException());
         return PostResponse.from(post.get());
+    }
+
+    public List<PostResponse> getAllPostByBoardName(BoardType boardType) {
+        List<Post> posts = postRepository.findAllByBoardType(boardType);
+        List<PostResponse> postResponses = new ArrayList<>();
+        for (Post post : posts) {
+            postResponses.add(PostResponse.from(post));
+        }
+        return postResponses;
     }
 
     // PUT posts/{id}

@@ -1,5 +1,6 @@
 package org.sopt.repository;
 
+import org.sopt.domain.BoardType;
 import org.sopt.domain.Post;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface PostRepository {
     Optional<Post> findById(Long id);
     boolean deleteById(Long id);
     Long generateId();
+    List<Post> findAllByBoardType(BoardType boardType);
 }

@@ -8,6 +8,11 @@ public enum ErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST_001", "게시글을 찾을 수 없습니다"),
     POST_INVALID_TITLE(HttpStatus.BAD_REQUEST, "POST_002", "게시글 제목은 1~50자 이하입니다"),
     POST_INVALID_CONTENT(HttpStatus.BAD_REQUEST, "POST_003", "내용은 필수입니다"),
+    POST_INVALID_BOARD(HttpStatus.BAD_REQUEST, "POST_004", "게시판 선택은 필수입니다"),
+
+    //BOARD 관련 에러
+    BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "BOARD_001", "존재하지 않는 게시판입니다"),
+
 
     // 전체 에러
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "GLOBAL_001", "잘못된 요청입니다"),
