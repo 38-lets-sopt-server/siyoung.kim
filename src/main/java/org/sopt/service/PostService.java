@@ -68,6 +68,9 @@ public class PostService {
         Optional<Post> post = postRepository.findById(id);
         post.orElseThrow(() -> new PostNotFoundException());
 
+        PostValidator.validateTitle(request.title());
+        PostValidator.validateContent(request.content());
+
         post.get().update(request.title(), request.content());
 
         return PostResponse.from(post.get());

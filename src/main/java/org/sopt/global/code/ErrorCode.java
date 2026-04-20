@@ -9,7 +9,6 @@ public enum ErrorCode {
     POST_INVALID_TITLE(HttpStatus.BAD_REQUEST, "POST_002", "게시글 제목은 1~50자 이하입니다"),
     POST_INVALID_CONTENT(HttpStatus.BAD_REQUEST, "POST_003", "내용은 필수입니다"),
 
-
     // 전체 에러
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "GLOBAL_001", "잘못된 요청입니다"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "GLOBAL_002", "인증이 필요합니다"),
