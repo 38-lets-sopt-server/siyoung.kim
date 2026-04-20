@@ -9,9 +9,9 @@ public record PostResponse(
         String title,
         String content,
         String author,
-        String createdAt
-) {
-
+        String createdAt,
+        String boardType
+){
     // Post 객체를 PostResponse로 변환하는 정적 팩토리 메서드
     public static PostResponse from(Post post) {
         return new PostResponse(
@@ -19,7 +19,8 @@ public record PostResponse(
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthor(),
-                post.getCreatedAt()
+                post.getCreatedAt(),
+                post.getBoardType().getLabel()
         );
     }
 }
