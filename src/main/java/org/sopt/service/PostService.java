@@ -5,7 +5,7 @@ import org.sopt.dto.request.CreatePostRequest;
 import org.sopt.dto.request.UpdatePostRequest;
 import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
-import org.sopt.exception.PostNotFoundException;
+import org.sopt.global.exception.PostNotFoundException;
 import org.sopt.global.code.ErrorCode;
 import org.sopt.repository.PostRepository;
 import org.springframework.stereotype.Service;
@@ -62,14 +62,14 @@ public class PostService {
     // GET posts/{id}
     public PostResponse getPost(Long id) {
         Optional<Post> post = postRepository.findById(id);
-        post.orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+        post.orElseThrow(() -> new PostNotFoundException());
         return PostResponse.from(post.get());
     }
 
     // PUT posts/{id}
     public PostResponse updatePost(Long id, UpdatePostRequest request) {
         Optional<Post> post = postRepository.findById(id);
-        post.orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+        post.orElseThrow(() -> new PostNotFoundException());
 
         post.get().update(request.title(), request.content());
 
@@ -81,7 +81,7 @@ public class PostService {
         boolean isDeleted = postRepository.deleteById(id);
 
         if(!isDeleted) {
-            throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
+            throw new PostNotFoundException();
         }
     }
 }

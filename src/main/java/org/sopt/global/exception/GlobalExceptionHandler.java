@@ -1,9 +1,7 @@
 package org.sopt.global.exception;
 
-import org.sopt.global.code.ErrorCode;
 import org.sopt.global.response.ApiResponse;
 import org.sopt.global.response.ErrorResponse;
-import org.sopt.exception.PostNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,9 +13,9 @@ public class GlobalExceptionHandler {
 
     // 커스텀 예외 handler, PostNotFoundException → 404
     @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handlePostNotFound(ErrorCode e) {
+    public ResponseEntity<ApiResponse<Void>> handlePostNotFound(BaseException e) {
         return ResponseEntity
-                .status(e.getStatus())
+                .status(e.getErrorCode().getHttpStatus())
                 .body(ApiResponse.error(e));
     }
 
