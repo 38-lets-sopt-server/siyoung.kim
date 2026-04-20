@@ -2,73 +2,86 @@ package org.sopt.service;
 
 import org.sopt.domain.Post;
 import org.sopt.dto.request.CreatePostRequest;
+import org.sopt.dto.request.UpdatePostRequest;
 import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
 import org.sopt.exception.PostNotFoundException;
+import org.sopt.global.code.ErrorCode;
 import org.sopt.repository.PostRepository;
-import org.sopt.validator.PostValidator;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+
+@Service
 public class PostService {
-    private final PostRepository postRepository = new PostRepository();
+
+    private final PostRepository postRepository;
+
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     // CREATE
     public CreatePostResponse createPost(CreatePostRequest request) {
-
-        //PostValidator 도입 -> 서비스 계층에서 유효성 검증 책임 분리
-        PostValidator.validateTitle(request.title);
-        PostValidator.validateContent(request.content);
-
+        // 1. 유효성 검증
+        if (request.title() == null || request.title().isBlank()) {
+            throw new IllegalArgumentException("제목은 필수입니다!");
+        }
+        if (request.content() == null || request.content().isBlank()) {
+            throw new IllegalArgumentException("내용은 필수입니다!");
+        }
+        // 2. Post 도메인 객체 생성
         String createdAt = java.time.LocalDateTime.now().toString();
-        Post post = new Post(postRepository.generateId(), request.title, request.content, request.author, createdAt);
+        Post post = new Post(
+                postRepository.generateId(),
+                request.title(),
+                request.content(),
+                request.author(),
+                createdAt
+        );
+        // 3. 저장
         postRepository.save(post);
+        // 4. 응답 DTO 조립해서 반환
         return new CreatePostResponse(post.getId(), "게시글 등록 완료!");
     }
 
-    // READ - 전체 📝 과제
+    // GET /posts
     public List<PostResponse> getAllPosts() {
-        // TODO
         List<Post> posts = postRepository.findAll();
+        List<PostResponse> postResponses = new ArrayList<>();
+        for (Post post : posts) {
+            postResponses.add(PostResponse.from(post));
+        }
 
-        return posts.stream()
-                .map(p -> new PostResponse(p))
-                .toList();
+        return postResponses;
     }
 
-    // READ - 단건 📝 과제
+    // GET posts/{id}
     public PostResponse getPost(Long id) {
-        // TODO
-        Post p = postRepository.findById(id);
-
-        if(p == null) {
-            throw new PostNotFoundException();
-        }
-
-        return new PostResponse(p);
+        Optional<Post> post = postRepository.findById(id);
+        post.orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
+        return PostResponse.from(post.get());
     }
 
-    // UPDATE 📝 과제
-    public void updatePost(Long id, String newTitle, String newContent) {
-        // TODO
-        Post p = postRepository.findById(id);
-        if(p == null) {
-            throw new PostNotFoundException();
-        }
+    // PUT posts/{id}
+    public PostResponse updatePost(Long id, UpdatePostRequest request) {
+        Optional<Post> post = postRepository.findById(id);
+        post.orElseThrow(() -> new PostNotFoundException(ErrorCode.POST_NOT_FOUND));
 
-        PostValidator.validateTitle(newTitle);
-        PostValidator.validateContent(newContent);
+        post.get().update(request.title(), request.content());
 
-        p.update(newTitle, newContent);
+        return PostResponse.from(post.get());
     }
 
-    // DELETE 📝 과제
+    // DELETE posts/{id}
     public void deletePost(Long id) {
-        // TODO
         boolean isDeleted = postRepository.deleteById(id);
 
         if(!isDeleted) {
-            throw new PostNotFoundException();
+            throw new PostNotFoundException(ErrorCode.POST_NOT_FOUND);
         }
     }
 }
