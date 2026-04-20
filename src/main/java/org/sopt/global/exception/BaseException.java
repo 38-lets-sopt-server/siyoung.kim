@@ -1,7 +1,6 @@
 package org.sopt.global.exception;
 
 import org.sopt.global.code.ErrorCode;
-import org.springframework.http.HttpStatus;
 
 public class BaseException extends RuntimeException{
 

@@ -6,7 +6,6 @@ import org.sopt.dto.request.UpdatePostRequest;
 import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
 import org.sopt.global.exception.PostNotFoundException;
-import org.sopt.global.code.ErrorCode;
 import org.sopt.repository.PostRepository;
 import org.springframework.stereotype.Service;
 

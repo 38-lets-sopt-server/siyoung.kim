@@ -1,6 +1,5 @@
 package org.sopt.global.response;
 
-import org.sopt.global.code.ErrorCode;
 import org.sopt.global.code.SuccessCode;
 import org.sopt.global.exception.BaseException;
 
