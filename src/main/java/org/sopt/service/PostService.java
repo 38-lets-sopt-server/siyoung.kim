@@ -7,6 +7,7 @@ import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
 import org.sopt.global.exception.PostNotFoundException;
 import org.sopt.repository.PostRepository;
+import org.sopt.validator.PostValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,13 +26,10 @@ public class PostService {
 
     // CREATE
     public CreatePostResponse createPost(CreatePostRequest request) {
-        // 1. 유효성 검증
-        if (request.title() == null || request.title().isBlank()) {
-            throw new IllegalArgumentException("제목은 필수입니다!");
-        }
-        if (request.content() == null || request.content().isBlank()) {
-            throw new IllegalArgumentException("내용은 필수입니다!");
-        }
+        // 1. 유효성 검증(PostValidator 활용)
+        PostValidator.validateTitle(request.title());
+        PostValidator.validateContent(request.content());
+
         // 2. Post 도메인 객체 생성
         String createdAt = java.time.LocalDateTime.now().toString();
         Post post = new Post(
