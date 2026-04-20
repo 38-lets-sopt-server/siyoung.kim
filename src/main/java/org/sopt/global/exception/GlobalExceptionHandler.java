@@ -12,20 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     // 커스텀 예외 handler, PostNotFoundException → 404
-    @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handlePostNotFound(BaseException e) {
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ApiResponse<Void>> handleBaseException(BaseException e) {
         return ResponseEntity
                 .status(e.getErrorCode().getHttpStatus())
                 .body(ApiResponse.error(e));
     }
 
-    // 유효성 검증 실패 → 400
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException e) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(e.getMessage()));
-    }
 
     // 예상치 못한 모든 예외 → 500
     @ExceptionHandler(Exception.class)
