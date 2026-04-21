@@ -1,5 +1,6 @@
 package org.sopt.service;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.sopt.domain.BoardType;
 import org.sopt.domain.Post;
 import org.sopt.dto.request.CreatePostRequest;
@@ -57,11 +58,24 @@ public class PostService {
         return new CreatePostResponse(post.getId(), "게시글 등록 완료!");
     }
 
-    // GET /posts
-    public List<PostResponse> getAllPosts() {
+    // GET /posts <- 페이지네이션 적용하는 메소드로 변경!
+    public List<PostResponse> getAllPosts(int page, int size) {
+
+        if(page < 0 || size < 0) {
+            throw new BaseException(ErrorCode.POST_INVALID_PAGINATION);
+        }
+
         List<Post> posts = postRepository.findAll();
+
+        int start = page * size;
+        // 끝 부분은 start + size랑 List<Post> 중 누가 더 작냐를 비교해야함
+        int end = Math.min(start + size, posts.size());
+
         List<PostResponse> postResponses = new ArrayList<>();
-        for (Post post : posts) {
+
+        posts = posts.subList(start, end);
+
+        for(Post post : posts) {
             postResponses.add(PostResponse.from(post));
         }
 

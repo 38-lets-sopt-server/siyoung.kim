@@ -39,9 +39,12 @@ public class PostController {
 
     // GET /posts 📝 과제
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPosts() {
+    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
         //TODO
-        List<PostResponse> response = postService.getAllPosts();
+        List<PostResponse> response = postService.getAllPosts(page, size);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
         return ResponseEntity

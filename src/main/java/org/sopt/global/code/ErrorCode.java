@@ -10,6 +10,8 @@ public enum ErrorCode {
     POST_INVALID_CONTENT(HttpStatus.BAD_REQUEST, "POST_003", "내용은 필수입니다"),
     POST_INVALID_BOARD(HttpStatus.BAD_REQUEST, "POST_004", "게시판 선택은 필수입니다"),
 
+    POST_INVALID_PAGINATION(HttpStatus.BAD_REQUEST, "POST_005", "잘못된 페이지네이션입니다"),
+
     //BOARD 관련 에러
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "BOARD_001", "존재하지 않는 게시판입니다"),
 
