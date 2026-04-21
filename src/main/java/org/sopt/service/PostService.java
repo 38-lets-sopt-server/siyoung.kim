@@ -33,10 +33,13 @@ public class PostService {
         PostValidator.validateTitle(request.title());
         PostValidator.validateContent(request.content());
 
-        // board type 선택안했을 때
-        if(request.boardType() == null) {
+        // board 를 지정하지 않았을 때
+        if(request.boardType() == null || request.boardType().isBlank()) {
             throw new BaseException(ErrorCode.POST_INVALID_BOARD);
         }
+
+        // 존재하지 않는 board 를 보냈을 때는 BoardType의 from 에서 에러 터지게 만듦
+        BoardType boardType = BoardType.from(request.boardType());
 
         // 2. Post 도메인 객체 생성
         String createdAt = java.time.LocalDateTime.now().toString();
@@ -46,7 +49,7 @@ public class PostService {
                 request.content(),
                 request.author(),
                 createdAt,
-                request.boardType()
+                boardType
         );
         // 3. 저장
         postRepository.save(post);

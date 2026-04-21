@@ -7,5 +7,5 @@ public record CreatePostRequest(
         String title,
         String content,
         String author,
-        BoardType boardType
+        String boardType
 ) {}
