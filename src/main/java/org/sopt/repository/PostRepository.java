@@ -1,35 +1,17 @@
 package org.sopt.repository;
 
+import org.sopt.domain.BoardType;
 import org.sopt.domain.Post;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class PostRepository {
-    private final List<Post> postList = new ArrayList<>();
-    private Long nextId = 1L;
+public interface PostRepository {
 
-    public Post save(Post post) {
-        postList.add(post);
-        return post;
-    }
-
-    public List<Post> findAll() {
-        return postList;
-    }
-
-    public Post findById(Long id) {
-        return postList.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public boolean deleteById(Long id) {
-        return postList.removeIf(p -> p.getId().equals(id));
-    }
-
-    public Long generateId() {
-        return nextId++;
-    }
+    Post save(Post post);
+    List<Post> findAll();
+    Optional<Post> findById(Long id);
+    boolean deleteById(Long id);
+    Long generateId();
+    List<Post> findAllByBoardType(BoardType boardType);
 }

@@ -7,12 +7,16 @@ public class Post {
     private String author;    // 목록, 상세 화면 — 글쓴이
     private String createdAt; // 목록, 상세 화면 — 작성 시각
 
-    public Post(Long id, String title, String content, String author, String createdAt) {
+    private BoardType boardType; // 게시판 종류 필드 추가
+
+    public Post(Long id, String title, String content, String author,
+                String createdAt, BoardType boardType) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.author = author;
         this.createdAt = createdAt;
+        this.boardType = boardType;
     }
 
     public Long getId() { return id; }
@@ -20,6 +24,8 @@ public class Post {
     public String getContent() { return content; }
     public String getAuthor() { return author; }
     public String getCreatedAt() { return createdAt; }
+    public BoardType getBoardType() { return boardType; }
+
 
     public void update(String title, String content) {
         this.title = title;
