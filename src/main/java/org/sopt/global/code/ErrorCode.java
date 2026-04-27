@@ -16,6 +16,9 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "BOARD_001", "존재하지 않는 게시판입니다"),
 
 
+    // User 관련 에러
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_001", "사용자를 찾을 수 없습니다"),
+
     // 전체 에러
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "GLOBAL_001", "잘못된 요청입니다"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "GLOBAL_002", "인증이 필요합니다"),
