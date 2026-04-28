@@ -6,7 +6,7 @@ import org.sopt.dto.request.UpdatePostRequest;
 import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
 import org.sopt.global.code.SuccessCode;
-import org.sopt.global.response.ApiResponse;
+import org.sopt.global.response.BaseResponse;
 import org.sopt.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,19 +25,19 @@ public class PostController {
 
     // POST /posts ✅ 같이 구현
     @PostMapping
-    public ResponseEntity<ApiResponse<CreatePostResponse>> createPost(
+    public ResponseEntity<BaseResponse<CreatePostResponse>> createPost(
             @RequestBody CreatePostRequest request
     ) {
         CreatePostResponse response = postService.createPost(request);
         SuccessCode sc = SuccessCode.SUCCESS_CREATED;
 
-        return ApiResponse.success(sc, response);
+        return BaseResponse.success(sc, response);
     }
 
 
     // GET /posts 📝 과제
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPosts(
+    public ResponseEntity<BaseResponse<List<PostResponse>>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) BoardType boardType
@@ -51,24 +51,24 @@ public class PostController {
         }
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
-        return ApiResponse.success(sc, response);
+        return BaseResponse.success(sc, response);
     }
 
     // GET /posts/{id} 📝 과제
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PostResponse>> getPost(
+    public ResponseEntity<BaseResponse<PostResponse>> getPost(
             @PathVariable Long id
     ) {
         //TODO
         PostResponse response = postService.getPost(id);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
-        return ApiResponse.success(sc, response);
+        return BaseResponse.success(sc, response);
     }
 
     // PUT /posts/{id} 📝 과제
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<PostResponse>> updatePost(
+    public ResponseEntity<BaseResponse<PostResponse>> updatePost(
             @PathVariable Long id,
             @RequestBody UpdatePostRequest request
     ) {
@@ -76,12 +76,12 @@ public class PostController {
         PostResponse response = postService.updatePost(id, request);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
-        return ApiResponse.success(sc, response);
+        return BaseResponse.success(sc, response);
     }
 
     // DELETE /posts/{id} 📝 과제
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deletePost(
+    public ResponseEntity<BaseResponse<Void>> deletePost(
             @PathVariable Long id
     ) {
         //TODO
@@ -89,7 +89,7 @@ public class PostController {
         /* delete 시 body 없는 게 나을 거 같은데(204) 공통 응답 객체로 전부 통일 하고 싶어서
          status code 를 200으로 통일... 이 부분은 body 없이 바로 .noContent.build() 해도 될 거 같음 */
         SuccessCode sc = SuccessCode.SUCCESS_OK;
-        return ApiResponse.success(sc);
+        return BaseResponse.success(sc);
 
     }
 
