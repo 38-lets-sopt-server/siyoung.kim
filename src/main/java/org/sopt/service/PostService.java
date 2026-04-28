@@ -78,10 +78,12 @@ public class PostService {
 
     // boardType 있을 때
     @Transactional(readOnly = true)
-    public List<PostResponse> getAllPosts(int page, int size, BoardType boardType) {
+    public List<PostResponse> getAllPosts(int page, int size, String boardName) {
         if(page < 0 || size <= 0) {
             throw new BaseException(ErrorCode.POST_INVALID_PAGINATION);
         }
+
+        BoardType boardType = BoardType.from(boardName);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Post> postPage = postRepository.findAllByBoardType(pageable, boardType);

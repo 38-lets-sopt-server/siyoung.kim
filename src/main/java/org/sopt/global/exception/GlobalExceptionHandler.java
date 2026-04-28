@@ -5,6 +5,7 @@ import org.sopt.global.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 
 @RestControllerAdvice
@@ -17,6 +18,11 @@ public class GlobalExceptionHandler {
         return BaseResponse.error(e);
     }
 
+    // 잘못된 요청
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public  ResponseEntity<BaseResponse<Void>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        return BaseResponse.error(new BaseException(ErrorCode.INVALID_INPUT));
+    }
 
     // 예상치 못한 모든 예외 → 500
     @ExceptionHandler(Exception.class)
