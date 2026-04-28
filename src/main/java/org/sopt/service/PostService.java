@@ -28,7 +28,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository,  UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
@@ -100,7 +100,7 @@ public class PostService {
         return PostResponse.from(post);
     }
 
-    @Transactional  // 변경 → 더티 체킹으로 save() 없이 자동 UPDATE
+    @Transactional  // 변경 → 더티 체킹으로 save() 없이 자동 UPDATE, 현재는 없지만 권한 체크 구현 필요
     public PostResponse updatePost(Long id, UpdatePostRequest request) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.POST_NOT_FOUND));
@@ -115,8 +115,11 @@ public class PostService {
     }
 
     // DELETE posts/{id}
-    // 현재는 구현안해놨지만, 403 권한없음 오류 내는 것도 구현 필요
+    // 현재는 없지만 권한 체크 구현 필요
     public void deletePost(Long id) {
-        postRepository.deleteById(id);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ErrorCode.POST_NOT_FOUND));
+
+        postRepository.delete(post);
     }
 }

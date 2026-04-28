@@ -12,7 +12,6 @@ import org.sopt.dto.response.PostResponse;
 import org.sopt.global.code.SuccessCode;
 import org.sopt.global.response.BaseResponse;
 import org.sopt.service.PostService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ import java.util.List;
 
 @Tag(name = "Post", description = "게시글 관련 API")
 @RestController
-@RequestMapping("api/v1/posts")
+@RequestMapping("/api/v1/posts")
 public class PostController {
 
     private final PostService postService;
@@ -70,7 +69,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<BaseResponse<List<PostResponse>>> getAllPosts(
             @Parameter(description = "조회할 페이지, default = 0")
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0") int page, // RequestParam은 필터링 할 때 사용(URL 끝에 ? 붙여서 k-v쌍으로..)
 
             @Parameter(description = "가져올 Post의 사이즈, default = 10")
             @RequestParam(defaultValue = "10") int size,
@@ -102,7 +101,7 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<PostResponse>> getPost(
             @Parameter(description = "조회할 게시글 id", example = "1", required = true)
-            @PathVariable Long id
+            @PathVariable Long id // PathVariable은 URL 경로의 일부를 변수로 사용, 어떤 자원을 식별할 때 사용
     ) {
         //TODO
         PostResponse response = postService.getPost(id);
@@ -125,6 +124,7 @@ public class PostController {
     public ResponseEntity<BaseResponse<PostResponse>> updatePost(
             @Parameter(description = "수정할 게시글 id", example = "1", required = true)
             @PathVariable Long id,
+
             @RequestBody UpdatePostRequest request
     ) {
         //TODO
