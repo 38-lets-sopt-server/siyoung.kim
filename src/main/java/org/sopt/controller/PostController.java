@@ -31,9 +31,7 @@ public class PostController {
         CreatePostResponse response = postService.createPost(request);
         SuccessCode sc = SuccessCode.SUCCESS_CREATED;
 
-        return ResponseEntity
-                .status(sc.getStatus())
-                .body(ApiResponse.success(sc, response));
+        return ApiResponse.success(sc, response);
     }
 
 
@@ -47,10 +45,7 @@ public class PostController {
         List<PostResponse> response = postService.getAllPosts(page, size);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
-        return ResponseEntity
-                .status(sc.getStatus())
-                .body(ApiResponse.success(sc, response));
-
+        return ApiResponse.success(sc, response);
     }
 
     // GET /posts/{id} 📝 과제
@@ -62,26 +57,24 @@ public class PostController {
         PostResponse response = postService.getPost(id);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
-        return ResponseEntity
-                .status(sc.getStatus())
-                .body(ApiResponse.success(sc, response));
+        return ApiResponse.success(sc, response);
     }
 
     // GET /posts/{boardName} <- boardName은 free 이런식으로 소문자로 들어올거임
-    @GetMapping("/board/{boardName}")
-    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPostByBoardName(
-            @PathVariable String boardName
-    ) {
-        BoardType boardType = BoardType.from(boardName);
-
-        List<PostResponse> response = postService.getAllPostByBoardName(boardType);
-
-        SuccessCode sc = SuccessCode.SUCCESS_OK;
-
-        return ResponseEntity
-                .status(sc.getStatus())
-                .body(ApiResponse.success(sc, response));
-    }
+//    @GetMapping("/board/{boardName}")
+//    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPostByBoardName(
+//            @PathVariable String boardName
+//    ) {
+//        BoardType boardType = BoardType.from(boardName);
+//
+//        List<PostResponse> response = postService.getAllPostByBoardName(boardType);
+//
+//        SuccessCode sc = SuccessCode.SUCCESS_OK;
+//
+//        return ResponseEntity
+//                .status(sc.getStatus())
+//                .body(ApiResponse.success(sc, response));
+//    }
 
     // PUT /posts/{id} 📝 과제
     @PutMapping("/{id}")
@@ -93,9 +86,7 @@ public class PostController {
         PostResponse response = postService.updatePost(id, request);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
-        return ResponseEntity
-                .status(sc.getStatus())
-                .body(ApiResponse.success(sc, response));
+        return ApiResponse.success(sc, response);
     }
 
     // DELETE /posts/{id} 📝 과제
@@ -108,9 +99,7 @@ public class PostController {
         /* delete 시 body 없는 게 나을 거 같은데(204) 공통 응답 객체로 전부 통일 하고 싶어서
          status code 를 200으로 통일... 이 부분은 body 없이 바로 .noContent.build() 해도 될 거 같음 */
         SuccessCode sc = SuccessCode.SUCCESS_OK;
-        return ResponseEntity
-                .status(sc.getStatus())
-                .body(ApiResponse.success(sc, null));
+        return ApiResponse.success(sc);
 
     }
 
