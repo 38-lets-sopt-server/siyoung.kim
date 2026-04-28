@@ -9,6 +9,7 @@ import org.sopt.dto.response.CreatePostResponse;
 import org.sopt.dto.response.PostResponse;
 import org.sopt.global.code.ErrorCode;
 import org.sopt.global.exception.BaseException;
+import org.sopt.global.exception.PostNotFoundException;
 import org.sopt.repository.PostRepository;
 import org.sopt.repository.UserRepository;
 import org.sopt.validator.PostValidator;
@@ -96,14 +97,14 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponse getPost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.POST_NOT_FOUND));
+                .orElseThrow(() -> new PostNotFoundException());
         return PostResponse.from(post);
     }
 
     @Transactional  // 변경 → 더티 체킹으로 save() 없이 자동 UPDATE, 현재는 없지만 권한 체크 구현 필요
     public PostResponse updatePost(Long id, UpdatePostRequest request) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.POST_NOT_FOUND));
+                .orElseThrow(() -> new PostNotFoundException());
 
         PostValidator.validateTitle(request.title());
         PostValidator.validateContent(request.content());
@@ -118,7 +119,7 @@ public class PostService {
     // 현재는 없지만 권한 체크 구현 필요
     public void deletePost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ErrorCode.POST_NOT_FOUND));
+                .orElseThrow(() -> new PostNotFoundException());
 
         postRepository.delete(post);
     }

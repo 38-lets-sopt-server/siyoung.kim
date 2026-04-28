@@ -17,6 +17,10 @@ public enum ErrorCode {
     // User 관련 에러
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_001", "사용자를 찾을 수 없습니다"),
 
+    // Like 관련 에러
+    LIKE_DUPLICATED(HttpStatus.CONFLICT, "LIKE_001", "이미 좋아요를 눌렀습니다"),
+    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "LIKE_002", "좋아요를 누르지 않았습니다"),
+
     // 전체 에러
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "GLOBAL_001", "잘못된 요청입니다"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "GLOBAL_002", "인증이 필요합니다"),
