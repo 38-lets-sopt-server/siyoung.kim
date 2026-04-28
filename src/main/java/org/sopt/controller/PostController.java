@@ -39,10 +39,16 @@ public class PostController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) BoardType boardType
     ) {
         //TODO
-        List<PostResponse> response = postService.getAllPosts(page, size);
+        List<PostResponse> response;
+        if(boardType == null) {
+            response = postService.getAllPosts(page, size);
+        } else {
+            response = postService.getAllPosts(page, size, boardType);
+        }
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
         return ApiResponse.success(sc, response);
@@ -59,22 +65,6 @@ public class PostController {
 
         return ApiResponse.success(sc, response);
     }
-
-    // GET /posts/{boardName} <- boardName은 free 이런식으로 소문자로 들어올거임
-//    @GetMapping("/board/{boardName}")
-//    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPostByBoardName(
-//            @PathVariable String boardName
-//    ) {
-//        BoardType boardType = BoardType.from(boardName);
-//
-//        List<PostResponse> response = postService.getAllPostByBoardName(boardType);
-//
-//        SuccessCode sc = SuccessCode.SUCCESS_OK;
-//
-//        return ResponseEntity
-//                .status(sc.getStatus())
-//                .body(ApiResponse.success(sc, response));
-//    }
 
     // PUT /posts/{id} 📝 과제
     @PutMapping("/{id}")
