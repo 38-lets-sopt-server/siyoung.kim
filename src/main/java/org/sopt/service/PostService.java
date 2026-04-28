@@ -105,6 +105,9 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new BaseException(ErrorCode.POST_NOT_FOUND));
 
+        PostValidator.validateTitle(request.title());
+        PostValidator.validateContent(request.content());
+
         post.update(request.title(), request.content());
 
         // save() 호출 없어도 트랜잭션 커밋 시 UPDATE 쿼리 자동 실행
@@ -112,7 +115,8 @@ public class PostService {
     }
 
     // DELETE posts/{id}
+    // 현재는 구현안해놨지만, 403 권한없음 오류 내는 것도 구현 필요
     public void deletePost(Long id) {
-
+        postRepository.deleteById(id);
     }
 }
