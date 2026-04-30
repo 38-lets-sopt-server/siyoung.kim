@@ -79,12 +79,7 @@ public class PostController {
             @RequestParam(required = false) String boardType
     ) {
         //TODO
-        List<PostResponse> response;
-        if(boardType == null || boardType.isBlank()) {
-            response = postService.getAllPosts(page, size);
-        } else {
-            response = postService.getAllPosts(page, size, boardType);
-        }
+        List<PostResponse> response = postService.getAllPosts(page, size, boardType);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
         return BaseResponse.success(sc, response);

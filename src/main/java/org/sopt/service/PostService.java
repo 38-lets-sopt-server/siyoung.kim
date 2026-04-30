@@ -60,35 +60,25 @@ public class PostService {
         return new CreatePostResponse(post.getId(), "게시글 등록 완료!");
     }
 
-    //boardType 안 들어왔을 때
     @Transactional(readOnly = true)  // 조회 전용 → 더티 체킹 안 함 → 성능 최적화
-    public List<PostResponse> getAllPosts(int page, int size) {
+    public List<PostResponse> getAllPosts(int page, int size, String boardName) {
         if(page < 0 || size <= 0) {
             throw new BaseException(ErrorCode.POST_INVALID_PAGINATION);
         }
 
         // JPA로 바꾸면서 Pageable 사용할 수 있게 됨! (id 내림차순으로 정렬해서 return)
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<Post> postPage = postRepository.findAll(pageable);
+        Page<Post> postPage;
 
-        // Page 의 map 함수를 통해서 List 로 변환
-        return postPage.getContent().stream()
-                .map(PostResponse::from)
-                .toList();
-    }
-
-    // boardType 있을 때
-    @Transactional(readOnly = true)
-    public List<PostResponse> getAllPosts(int page, int size, String boardName) {
-        if(page < 0 || size <= 0) {
-            throw new BaseException(ErrorCode.POST_INVALID_PAGINATION);
+        // boardName 은 안들어올 수도 있으니까 이렇게 체크해주기
+        if(boardName == null || boardName.isBlank()) {
+            postPage = postRepository.findAll(pageable);
+        } else {
+            BoardType boardType = BoardType.from(boardName);
+            postPage = postRepository.findAllByBoardType(pageable, boardType);
         }
 
-        BoardType boardType = BoardType.from(boardName);
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<Post> postPage = postRepository.findAllByBoardType(pageable, boardType);
-
+        // Page 의 map 함수를 통해서 List 로 변환
         return postPage.getContent().stream()
                 .map(PostResponse::from)
                 .toList();
