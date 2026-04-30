@@ -2,7 +2,11 @@ package org.sopt.global.exception;
 
 import org.sopt.global.code.ErrorCode;
 import org.sopt.global.response.BaseResponse;
+import org.sopt.global.response.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -18,9 +22,17 @@ public class GlobalExceptionHandler {
         return BaseResponse.error(e);
     }
 
-    // 잘못된 요청
+    // 요청 파라미터 타입 불일치 시(ex: long인데 문자열 들어온 경우)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public  ResponseEntity<BaseResponse<Void>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        return BaseResponse.error(new BaseException(ErrorCode.INVALID_INPUT));
+    }
+
+    // @Valid 유효성 검증 실패 시
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<BaseResponse<Void>> handleValidationException(
+            MethodArgumentNotValidException e
+    ) {
         return BaseResponse.error(new BaseException(ErrorCode.INVALID_INPUT));
     }
 

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.sopt.dto.request.CreatePostRequest;
 import org.sopt.dto.request.UpdatePostRequest;
 import org.sopt.dto.response.CreatePostResponse;
@@ -44,7 +45,7 @@ public class PostController {
     })
     @PostMapping
     public ResponseEntity<BaseResponse<CreatePostResponse>> createPost(
-            @RequestBody CreatePostRequest request
+            @Valid @RequestBody CreatePostRequest request
     ) {
         CreatePostResponse response = postService.createPost(request);
         SuccessCode sc = SuccessCode.SUCCESS_CREATED;
@@ -125,7 +126,7 @@ public class PostController {
             @Parameter(description = "수정할 게시글 id", example = "1", required = true)
             @PathVariable Long id,
 
-            @RequestBody UpdatePostRequest request
+            @Valid @RequestBody UpdatePostRequest request
     ) {
         //TODO
         PostResponse response = postService.updatePost(id, request);
