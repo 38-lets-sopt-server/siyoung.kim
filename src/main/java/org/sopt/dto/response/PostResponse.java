@@ -18,6 +18,7 @@ public record PostResponse(
     public static PostResponse from(Post post) {
         return new PostResponse(
                 post.getTitle(),
+                // fetch join 쓰기 전에는 여기서 n+1 문제 생김
                 post.getUser().getNickname(),
                 post.getContent(),
                 post.getCreatedAt(),
