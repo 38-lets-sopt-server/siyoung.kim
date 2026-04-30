@@ -7,6 +7,7 @@ import org.hibernate.annotations.Where;
 import java.time.LocalDateTime;
 
 @Entity
+// 이 SQLDelete 덕분에 postRepository.delete() 하면 soft delete 됨
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
 public class Post extends BaseTimeEntity {

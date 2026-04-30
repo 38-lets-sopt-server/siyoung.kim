@@ -117,6 +117,7 @@ public class PostService {
 
     // DELETE posts/{id}
     // 현재는 없지만 권한 체크 구현 필요
+    @Transactional
     public void deletePost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException());
