@@ -2,8 +2,10 @@ package org.sopt.validator;
 
 import org.sopt.global.code.ErrorCode;
 import org.sopt.global.exception.BaseException;
+import org.springframework.stereotype.Component;
 
 // Post의 title과 content에 대한 유효성 검증하는 클래스
+@Component
 public class PostValidator {
 
     public static void validateTitle(String title) {
