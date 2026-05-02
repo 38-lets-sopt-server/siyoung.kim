@@ -1,8 +1,8 @@
 package org.sopt.service;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import org.sopt.domain.BoardType;
 import org.sopt.domain.Post;
+import org.sopt.domain.User;
 import org.sopt.dto.request.CreatePostRequest;
 import org.sopt.dto.request.UpdatePostRequest;
 import org.sopt.dto.response.CreatePostResponse;
@@ -11,26 +11,31 @@ import org.sopt.global.code.ErrorCode;
 import org.sopt.global.exception.BaseException;
 import org.sopt.global.exception.PostNotFoundException;
 import org.sopt.repository.PostRepository;
+import org.sopt.repository.UserRepository;
 import org.sopt.validator.PostValidator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
-    // CREATE
+    @Transactional
     public CreatePostResponse createPost(CreatePostRequest request) {
-        // 1. 유효성 검증(PostValidator 활용)
         PostValidator.validateTitle(request.title());
         PostValidator.validateContent(request.content());
 
@@ -39,84 +44,74 @@ public class PostService {
             throw new BaseException(ErrorCode.POST_INVALID_BOARD);
         }
 
-        // 존재하지 않는 board 를 보냈을 때는 BoardType의 from 에서 에러 터지게 만듦
+        // 존재하지 않는 board를 보냈을 때 BoardType 의 from 에서 에러 터지게 만들기
         BoardType boardType = BoardType.from(request.boardType());
 
-        // 2. Post 도메인 객체 생성
-        String createdAt = java.time.LocalDateTime.now().toString();
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
         Post post = new Post(
-                postRepository.generateId(),
                 request.title(),
                 request.content(),
-                request.author(),
-                createdAt,
-                boardType
+                boardType,
+                user
         );
-        // 3. 저장
-        postRepository.save(post);
-        // 4. 응답 DTO 조립해서 반환
+        postRepository.save(post);  // 영속성 컨텍스트에 올라감 → 커밋 시 INSERT
         return new CreatePostResponse(post.getId(), "게시글 등록 완료!");
     }
 
-    // GET /posts <- 페이지네이션 적용하는 메소드로 변경!
-    public List<PostResponse> getAllPosts(int page, int size) {
-
-        if(page < 0 || size < 0) {
+    @Transactional(readOnly = true)  // 조회 전용 → 더티 체킹 안 함 → 성능 최적화
+    public List<PostResponse> getAllPosts(int page, int size, String boardName) {
+        if(page < 0 || size <= 0) {
             throw new BaseException(ErrorCode.POST_INVALID_PAGINATION);
         }
 
-        List<Post> posts = postRepository.findAll();
+        // JPA로 바꾸면서 Pageable 사용할 수 있게 됨! (id 내림차순으로 정렬해서 return)
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Post> postPage;
 
-        int start = page * size;
-        // 끝 부분은 start + size랑 List<Post> 중 누가 더 작냐를 비교해야함
-        int end = Math.min(start + size, posts.size());
-
-        List<PostResponse> postResponses = new ArrayList<>();
-
-        posts = posts.subList(start, end);
-
-        for(Post post : posts) {
-            postResponses.add(PostResponse.from(post));
+        // boardName 은 안들어올 수도 있으니까 이렇게 체크해주기
+        if(boardName == null || boardName.isBlank()) {
+            postPage = postRepository.findAll(pageable);
+        } else {
+            BoardType boardType = BoardType.from(boardName);
+            postPage = postRepository.findAllByBoardType(pageable, boardType);
         }
 
-        return postResponses;
+        // Page 의 map 함수를 통해서 List 로 변환
+        return postPage.getContent().stream()
+                .map(PostResponse::from)
+                .toList();
     }
 
-    // GET posts/{id}
+    @Transactional(readOnly = true)
     public PostResponse getPost(Long id) {
-        Optional<Post> post = postRepository.findById(id);
-        post.orElseThrow(() -> new PostNotFoundException());
-        return PostResponse.from(post.get());
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException());
+        return PostResponse.from(post);
     }
 
-    public List<PostResponse> getAllPostByBoardName(BoardType boardType) {
-        List<Post> posts = postRepository.findAllByBoardType(boardType);
-        List<PostResponse> postResponses = new ArrayList<>();
-        for (Post post : posts) {
-            postResponses.add(PostResponse.from(post));
-        }
-        return postResponses;
-    }
-
-    // PUT posts/{id}
+    @Transactional  // 변경 → 더티 체킹으로 save() 없이 자동 UPDATE, 현재는 없지만 권한 체크 구현 필요
     public PostResponse updatePost(Long id, UpdatePostRequest request) {
-        Optional<Post> post = postRepository.findById(id);
-        post.orElseThrow(() -> new PostNotFoundException());
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException());
 
         PostValidator.validateTitle(request.title());
         PostValidator.validateContent(request.content());
 
-        post.get().update(request.title(), request.content());
+        post.update(request.title(), request.content());
 
-        return PostResponse.from(post.get());
+        // save() 호출 없어도 트랜잭션 커밋 시 UPDATE 쿼리 자동 실행
+        return PostResponse.from(post);
     }
 
     // DELETE posts/{id}
+    // 현재는 없지만 권한 체크 구현 필요
+    @Transactional
     public void deletePost(Long id) {
-        boolean isDeleted = postRepository.deleteById(id);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException());
 
-        if(!isDeleted) {
-            throw new PostNotFoundException();
-        }
+        postRepository.delete(post);
     }
 }

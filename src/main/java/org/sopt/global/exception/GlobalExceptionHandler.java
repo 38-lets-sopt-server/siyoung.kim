@@ -1,11 +1,15 @@
 package org.sopt.global.exception;
 
-import org.sopt.global.response.ApiResponse;
+import org.sopt.global.code.ErrorCode;
+import org.sopt.global.response.BaseResponse;
 import org.sopt.global.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 
 @RestControllerAdvice
@@ -14,18 +18,27 @@ public class GlobalExceptionHandler {
     // 커스텀 예외 handler
     // BaseException 으로 모든 예외 다 잡아서 공통 응답으로 반환할 수 있게 만들기
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ApiResponse<Void>> handleBaseException(BaseException e) {
-        return ResponseEntity
-                .status(e.getErrorCode().getHttpStatus())
-                .body(ApiResponse.error(e));
+    public ResponseEntity<BaseResponse<Void>> handleBaseException(BaseException e) {
+        return BaseResponse.error(e);
     }
 
+    // 요청 파라미터 타입 불일치 시(ex: long인데 문자열 들어온 경우)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public  ResponseEntity<BaseResponse<Void>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        return BaseResponse.error(new BaseException(ErrorCode.INVALID_INPUT));
+    }
+
+    // @Valid 유효성 검증 실패 시
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<BaseResponse<Void>> handleValidationException(
+            MethodArgumentNotValidException e
+    ) {
+        return BaseResponse.error(new BaseException(ErrorCode.INVALID_INPUT));
+    }
 
     // 예상치 못한 모든 예외 → 500
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("서버 내부 오류가 발생했습니다."));
+    public ResponseEntity<BaseResponse<Void>> handleException(Exception e) {
+        return BaseResponse.error(new BaseException(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 }
