@@ -2,14 +2,14 @@ package org.sopt.domain;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 
 @Entity
 // 이 SQLDelete 덕분에 postRepository.delete() 하면 soft delete 됨
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
-@Where(clause = "deleted_at IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 public class Post extends BaseTimeEntity {
 
     @Id // 앞에서 배운 PK
