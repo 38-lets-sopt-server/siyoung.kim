@@ -3,7 +3,10 @@ package org.sopt.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.sopt.dto.request.CreateUserRequest;
+import org.sopt.global.code.SuccessCode;
+import org.sopt.global.response.BaseResponse;
 import org.sopt.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +24,10 @@ public class UserController {
     }
 
     @PostMapping
-    public void createUser(@Valid @RequestBody CreateUserRequest createUser) {
+    public ResponseEntity<BaseResponse<Void>> createUser(@Valid @RequestBody CreateUserRequest createUser) {
         userService.createUser(createUser);
+        SuccessCode sc = SuccessCode.SUCCESS_CREATED;
+
+        return BaseResponse.success(sc);
     }
 }

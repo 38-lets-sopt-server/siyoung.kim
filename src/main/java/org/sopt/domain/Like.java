@@ -3,7 +3,9 @@ package org.sopt.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "likes") // like는 sql 의 예약어라서 likes라고 테이블명 변경
+@Table(name = "likes", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "post_id"})
+}) // like는 sql 의 예약어라서 likes라고 테이블명 변경
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

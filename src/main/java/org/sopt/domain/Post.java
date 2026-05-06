@@ -2,14 +2,14 @@ package org.sopt.domain;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 
 @Entity
 // 이 SQLDelete 덕분에 postRepository.delete() 하면 soft delete 됨
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
-@Where(clause = "deleted_at IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 public class Post extends BaseTimeEntity {
 
     @Id // 앞에서 배운 PK
@@ -20,6 +20,7 @@ public class Post extends BaseTimeEntity {
     private String content;   // 목록(미리보기), 상세(전체) 화면 — 내용
 
     @Column(name = "board_type")
+    @Enumerated(EnumType.STRING) // 이 어노테이션을 추가해야 내 enum 이름대로 db에 저장함
     private BoardType boardType; // 게시판 종류 필드 추가
 
     @ManyToOne(fetch = FetchType.LAZY)  // User : Post = 1 : N
@@ -44,7 +45,6 @@ public class Post extends BaseTimeEntity {
     public BoardType getBoardType() { return boardType; }
 
     public User getUser() { return user; }
-
 
     public void update(String title, String content) {
         this.title = title;

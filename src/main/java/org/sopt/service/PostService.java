@@ -36,8 +36,6 @@ public class PostService {
 
     @Transactional
     public CreatePostResponse createPost(CreatePostRequest request) {
-        PostValidator.validateTitle(request.title());
-        PostValidator.validateContent(request.content());
 
         // board 를 지정하지 않았을 때
         if(request.boardType() == null || request.boardType().isBlank()) {
@@ -86,7 +84,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostResponse getPost(Long id) {
-        Post post = postRepository.findById(id)
+        Post post = postRepository.findIdWithUser(id)
                 .orElseThrow(() -> new PostNotFoundException());
         return PostResponse.from(post);
     }
@@ -95,9 +93,6 @@ public class PostService {
     public PostResponse updatePost(Long id, UpdatePostRequest request) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException());
-
-        PostValidator.validateTitle(request.title());
-        PostValidator.validateContent(request.content());
 
         post.update(request.title(), request.content());
 
