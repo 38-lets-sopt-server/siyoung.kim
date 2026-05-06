@@ -18,6 +18,7 @@ public record CreatePostRequest(
         String content,
 
         @Schema(description = "게시판 종류입니다. 종류는 free, hot, secret", example = "free")
+        @NotBlank(message = "게시글 작성은 필수입니다.")
         String boardType,
 
         @Schema(description = "작성자의 id입니다", example = "1")

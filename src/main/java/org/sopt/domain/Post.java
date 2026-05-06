@@ -20,6 +20,7 @@ public class Post extends BaseTimeEntity {
     private String content;   // 목록(미리보기), 상세(전체) 화면 — 내용
 
     @Column(name = "board_type")
+    @Enumerated(EnumType.STRING)
     private BoardType boardType; // 게시판 종류 필드 추가
 
     @ManyToOne(fetch = FetchType.LAZY)  // User : Post = 1 : N
