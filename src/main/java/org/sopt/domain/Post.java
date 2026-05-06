@@ -20,7 +20,7 @@ public class Post extends BaseTimeEntity {
     private String content;   // 목록(미리보기), 상세(전체) 화면 — 내용
 
     @Column(name = "board_type")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // 이 어노테이션을 추가해야 내 enum 이름대로 db에 저장함
     private BoardType boardType; // 게시판 종류 필드 추가
 
     @ManyToOne(fetch = FetchType.LAZY)  // User : Post = 1 : N
