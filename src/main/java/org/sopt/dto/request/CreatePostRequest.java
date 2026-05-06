@@ -2,6 +2,7 @@ package org.sopt.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 // 게시글 작성 요청 (클라이언트 → 서버)
@@ -20,5 +21,6 @@ public record CreatePostRequest(
         String boardType,
 
         @Schema(description = "작성자의 id입니다", example = "1")
+        @NotNull(message = "사용자 id는 필수입니다.") // 이러한 숫자 데이터타입은 @NotNull로 유효성 검증
         Long userId
 ) {}
