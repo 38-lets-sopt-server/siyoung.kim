@@ -1,6 +1,6 @@
-package org.sopt.repository;
+package org.sopt.user.repository;
 
-import org.sopt.domain.User;
+import org.sopt.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

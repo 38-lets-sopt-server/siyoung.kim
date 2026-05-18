@@ -1,6 +1,6 @@
-package org.sopt.dto.response;
+package org.sopt.user.dto.response;
 
-import org.sopt.domain.User;
+import org.sopt.user.entity.User;
 
 public record UserResponse (
         Long id,

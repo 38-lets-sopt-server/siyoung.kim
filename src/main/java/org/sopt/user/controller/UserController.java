@@ -1,11 +1,11 @@
-package org.sopt.controller;
+package org.sopt.user.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.sopt.dto.request.CreateUserRequest;
+import org.sopt.user.dto.request.CreateUserRequest;
 import org.sopt.global.code.SuccessCode;
 import org.sopt.global.response.BaseResponse;
-import org.sopt.service.UserService;
+import org.sopt.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
