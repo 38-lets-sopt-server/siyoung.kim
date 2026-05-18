@@ -14,6 +14,6 @@ public class UserService {
     }
 
     public void createUser(CreateUserRequest createUser) {
-        userRepository.save(new User(createUser.nickname(), createUser.email()));
+        userRepository.save(new User(createUser.nickname(), createUser.email(), createUser.password()));
     }
 }
