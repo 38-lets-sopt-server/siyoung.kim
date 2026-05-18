@@ -36,5 +36,8 @@ public class User extends BaseTimeEntity {
         return this.email;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
     
 }
