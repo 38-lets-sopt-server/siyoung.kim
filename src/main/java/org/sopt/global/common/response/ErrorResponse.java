@@ -1,3 +1,3 @@
-package org.sopt.global.response;
+package org.sopt.global.common.response;
 
 public record ErrorResponse(String message) {}

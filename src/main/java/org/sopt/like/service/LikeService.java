@@ -3,7 +3,7 @@ package org.sopt.like.service;
 import org.sopt.like.entity.Like;
 import org.sopt.post.entity.Post;
 import org.sopt.user.entity.User;
-import org.sopt.global.code.ErrorCode;
+import org.sopt.global.common.code.ErrorCode;
 import org.sopt.global.exception.BaseException;
 import org.sopt.global.exception.PostNotFoundException;
 import org.sopt.like.repository.LikeRepository;

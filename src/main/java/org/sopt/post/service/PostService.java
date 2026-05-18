@@ -7,7 +7,7 @@ import org.sopt.post.dto.request.CreatePostRequest;
 import org.sopt.post.dto.request.UpdatePostRequest;
 import org.sopt.post.dto.response.CreatePostResponse;
 import org.sopt.post.dto.response.PostResponse;
-import org.sopt.global.code.ErrorCode;
+import org.sopt.global.common.code.ErrorCode;
 import org.sopt.global.exception.BaseException;
 import org.sopt.global.exception.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;

@@ -1,7 +1,7 @@
-package org.sopt.global.response;
+package org.sopt.global.common.response;
 
-import org.sopt.global.code.ErrorCode;
-import org.sopt.global.code.SuccessCode;
+import org.sopt.global.common.code.ErrorCode;
+import org.sopt.global.common.code.SuccessCode;
 import org.sopt.global.exception.BaseException;
 import org.springframework.http.ResponseEntity;
 

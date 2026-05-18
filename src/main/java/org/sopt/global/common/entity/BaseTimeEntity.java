@@ -1,4 +1,4 @@
-package org.sopt.domain;
+package org.sopt.global.common.entity;
 
 
 import jakarta.persistence.EntityListeners;

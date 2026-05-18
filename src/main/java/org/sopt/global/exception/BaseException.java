@@ -1,6 +1,6 @@
 package org.sopt.global.exception;
 
-import org.sopt.global.code.ErrorCode;
+import org.sopt.global.common.code.ErrorCode;
 
 public class BaseException extends RuntimeException{
 

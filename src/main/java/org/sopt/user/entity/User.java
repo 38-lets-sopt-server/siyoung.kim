@@ -1,7 +1,7 @@
 package org.sopt.user.entity;
 
 import jakarta.persistence.*;
-import org.sopt.domain.BaseTimeEntity;
+import org.sopt.global.common.entity.BaseTimeEntity;
 
 @Entity
 @Table(name = "users")  // "user"는 SQL 예약어라 테이블명을 변경해요
