@@ -1,0 +1,43 @@
+package org.sopt.like.controller;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.sopt.like.dto.request.CreateLikePostRequest;
+import org.sopt.global.common.code.SuccessCode;
+import org.sopt.global.common.response.BaseResponse;
+import org.sopt.like.service.LikeService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@Tag(name = "Like", description = "좋아요 관련 API")
+@RestController
+@RequestMapping("/api/v1/posts/{postId}/likes")
+@RequiredArgsConstructor
+public class LikeController {
+    private final LikeService likeService;
+
+    // 좋아요 추가
+    @PostMapping
+    public ResponseEntity<BaseResponse<Void>> likePost(
+            @PathVariable Long postId,
+            @Valid @RequestBody CreateLikePostRequest request
+    ) {
+        likeService.likePost(postId, request.userId());
+        SuccessCode sc = SuccessCode.SUCCESS_OK;
+
+        return BaseResponse.success(sc);
+    }
+
+    // 좋아요 취소
+    @DeleteMapping
+    public ResponseEntity<BaseResponse<Void>> cancelPost(
+            @PathVariable Long postId,
+            @Valid @RequestBody CreateLikePostRequest request
+    ) {
+        likeService.unlikePost(postId, request.userId());
+        SuccessCode sc = SuccessCode.SUCCESS_OK;
+
+        return BaseResponse.success(sc);
+    }
+}

@@ -2,9 +2,9 @@ package org.sopt.auth;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.sopt.dto.response.UserResponse;
+import org.sopt.user.dto.response.UserResponse;
 import org.sopt.global.jwt.TokenResponse;
-import org.sopt.global.response.BaseResponse;
+import org.sopt.global.common.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

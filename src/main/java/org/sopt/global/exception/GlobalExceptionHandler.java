@@ -1,11 +1,8 @@
 package org.sopt.global.exception;
 
-import org.sopt.global.code.ErrorCode;
-import org.sopt.global.response.BaseResponse;
-import org.sopt.global.response.ErrorResponse;
-import org.springframework.http.HttpStatus;
+import org.sopt.global.common.code.ErrorCode;
+import org.sopt.global.common.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
