@@ -1,4 +1,4 @@
-package org.sopt.dto.request;
+package org.sopt.like.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 

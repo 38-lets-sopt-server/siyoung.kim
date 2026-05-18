@@ -1,11 +1,11 @@
-package org.sopt.controller;
+package org.sopt.like.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.sopt.dto.request.CreateLikePostRequest;
+import org.sopt.like.dto.request.CreateLikePostRequest;
 import org.sopt.global.code.SuccessCode;
 import org.sopt.global.response.BaseResponse;
-import org.sopt.service.LikeService;
+import org.sopt.like.service.LikeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
