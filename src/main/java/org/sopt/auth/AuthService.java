@@ -1,13 +1,13 @@
 package org.sopt.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.domain.User;
-import org.sopt.dto.response.UserResponse;
+import org.sopt.user.entity.User;
+import org.sopt.user.dto.response.UserResponse;
 import org.sopt.global.jwt.JwtService;
 import org.sopt.global.jwt.RefreshToken;
 import org.sopt.global.jwt.RefreshTokenRepository;
 import org.sopt.global.jwt.TokenResponse;
-import org.sopt.repository.UserRepository;
+import org.sopt.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
