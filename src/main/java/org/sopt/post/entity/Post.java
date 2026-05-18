@@ -1,6 +1,9 @@
 package org.sopt.post.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.sopt.global.common.entity.BaseTimeEntity;
@@ -12,6 +15,8 @@ import java.time.LocalDateTime;
 // 이 SQLDelete 덕분에 postRepository.delete() 하면 soft delete 됨
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseTimeEntity {
 
     @Id // 앞에서 배운 PK
@@ -32,21 +37,12 @@ public class Post extends BaseTimeEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    protected Post() {}  // JPA 기본 생성자
-
     public Post(String title, String content, BoardType boardType, User user) {
         this.title = title;
         this.content = content;
         this.boardType = boardType;
         this.user = user;
     }
-
-    public Long getId() { return id; }
-    public String getTitle() { return title; }
-    public String getContent() { return content; }
-    public BoardType getBoardType() { return boardType; }
-
-    public User getUser() { return user; }
 
     public void update(String title, String content) {
         this.title = title;

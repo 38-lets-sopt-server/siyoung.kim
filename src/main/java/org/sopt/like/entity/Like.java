@@ -1,6 +1,9 @@
 package org.sopt.like.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.sopt.post.entity.Post;
 import org.sopt.user.entity.User;
 
@@ -8,6 +11,8 @@ import org.sopt.user.entity.User;
 @Table(name = "likes", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "post_id"})
 }) // like는 sql 의 예약어라서 likes라고 테이블명 변경
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,15 +26,10 @@ public class Like {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    protected Like() {}
-
     public Like(User user, Post post) {
         this.user = user;
         this.post = post;
     }
 
-    public Long getId() { return this.id; }
-    public User getUser() { return this.user; }
-    public Post getPost() { return this.post; }
 
 }
