@@ -1,4 +1,4 @@
-package org.sopt.controller;
+package org.sopt.post.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -6,13 +6,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.sopt.dto.request.CreatePostRequest;
-import org.sopt.dto.request.UpdatePostRequest;
-import org.sopt.dto.response.CreatePostResponse;
-import org.sopt.dto.response.PostResponse;
+import org.sopt.post.dto.request.CreatePostRequest;
+import org.sopt.post.dto.request.UpdatePostRequest;
+import org.sopt.post.dto.response.CreatePostResponse;
+import org.sopt.post.dto.response.PostResponse;
 import org.sopt.global.code.SuccessCode;
 import org.sopt.global.response.BaseResponse;
-import org.sopt.service.PostService;
+import org.sopt.post.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

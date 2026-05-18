@@ -1,4 +1,4 @@
-package org.sopt.domain;
+package org.sopt.post.entity;
 
 import org.sopt.global.exception.BoardTypeNotFoundException;
 
