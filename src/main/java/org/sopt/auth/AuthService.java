@@ -28,10 +28,10 @@ public class AuthService {
 
     public UserResponse loginWithCredentials(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new BaseException(ErrorCode.LOGIN_FAILED));
 
         if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
+            throw new BaseException(ErrorCode.LOGIN_FAILED);
         }
 
         return UserResponse.from(user);
@@ -45,7 +45,7 @@ public class AuthService {
         String refreshToken = jwtService.generateRefreshToken(user.id());
 
         // 기존 Refresh Token 삭제 후 새로 저장
-        refreshTokenRepository.deleteByMemberId(user.id());
+        refreshTokenRepository.deleteByUserId(user.id());
         refreshTokenRepository.save(
                 RefreshToken.of(user.id(), refreshToken, refreshTokenExpiresInSeconds)
         );
