@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
+    // 사용자 생성 api
     @PostMapping
     public ResponseEntity<BaseResponse<Void>> createUser(@Valid @RequestBody CreateUserRequest createUser) {
         userService.createUser(createUser);
