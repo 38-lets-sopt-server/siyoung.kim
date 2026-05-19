@@ -1,6 +1,7 @@
 package org.sopt.auth;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.global.common.code.SuccessCode;
 import org.sopt.user.dto.response.UserResponse;
@@ -23,16 +24,17 @@ public class AuthController {
     @Operation(summary = "로그인 (Access Token + Refresh Token 발급)")
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<LoginResponse>> login(
-            @RequestParam("email") String email,
-            @RequestParam("password") String password
+            @RequestBody @Valid
+            LoginRequest request
     ) {
-        TokenResponse tokens = authService.login(email, password);
+        TokenResponse tokens = authService.login(request.email(), request.password());
 
         // tokens에서 refreshToken 만 분리해서 cookie 에다가 저장하기
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokens.refreshToken())
                 .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
+                // 배포환경일때는 secure(true), sameSite("None") 으로 변경해야함
+                .secure(false)
+                .sameSite("Lax")
                 .path("/")
                 .maxAge(Duration.ofDays(14))
                 .build();
@@ -72,8 +74,9 @@ public class AuthController {
 
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokens.refreshToken())
                 .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
+                // 배포환경일 때는 secure(true), sameSite("None") 으로 변경해야함
+                .secure(false)
+                .sameSite("Lax")
                 .path("/")
                 .maxAge(Duration.ofDays(14))
                 .build();
