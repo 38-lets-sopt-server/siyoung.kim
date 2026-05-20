@@ -1,5 +1,6 @@
 package org.sopt.global.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.sopt.global.common.code.ErrorCode;
 import org.sopt.global.common.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +11,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     // 커스텀 예외 handler
     // BaseException 으로 모든 예외 다 잡아서 공통 응답으로 반환할 수 있게 만들기
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<BaseResponse<Void>> handleBaseException(BaseException e) {
+        log.warn("BaseException occurred. errorCode={}", e.getErrorCode());
         return BaseResponse.error(e);
     }
 
@@ -36,6 +39,10 @@ public class GlobalExceptionHandler {
     // 예상치 못한 모든 예외 → 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<Void>> handleException(Exception e) {
+        log.error("Unhandled exception occurred", e);
+
+        e.printStackTrace();
+
         return BaseResponse.error(new BaseException(ErrorCode.INTERNAL_SERVER_ERROR));
     }
 }
