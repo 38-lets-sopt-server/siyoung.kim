@@ -1,13 +1,12 @@
 package org.sopt.like.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sopt.like.dto.request.CreateLikePostRequest;
 import org.sopt.global.common.code.SuccessCode;
 import org.sopt.global.common.response.BaseResponse;
 import org.sopt.like.service.LikeService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Like", description = "좋아요 관련 API")
@@ -20,10 +19,13 @@ public class LikeController {
     // 좋아요 추가
     @PostMapping
     public ResponseEntity<BaseResponse<Void>> likePost(
-            @PathVariable Long postId,
-            @Valid @RequestBody CreateLikePostRequest request
+            Authentication authentication,
+
+            @PathVariable Long postId
     ) {
-        likeService.likePost(postId, request.userId());
+        Long userId = Long.parseLong(authentication.getName());
+
+        likeService.likePost(postId, userId);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
         return BaseResponse.success(sc);
@@ -31,11 +33,14 @@ public class LikeController {
 
     // 좋아요 취소
     @DeleteMapping
-    public ResponseEntity<BaseResponse<Void>> cancelPost(
-            @PathVariable Long postId,
-            @Valid @RequestBody CreateLikePostRequest request
+    public ResponseEntity<BaseResponse<Void>> cancelLike(
+            Authentication authentication,
+
+            @PathVariable Long postId
     ) {
-        likeService.unlikePost(postId, request.userId());
+        Long userId = Long.parseLong(authentication.getName());
+
+        likeService.cancelLike(postId, userId);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
         return BaseResponse.success(sc);

@@ -19,9 +19,5 @@ public record CreatePostRequest(
 
         @Schema(description = "게시판 종류입니다. 종류는 free, hot, secret", example = "free")
         @NotBlank(message = "게시글 작성은 필수입니다.")
-        String boardType,
-
-        @Schema(description = "작성자의 id입니다", example = "1")
-        @NotNull(message = "사용자 id는 필수입니다.") // 이러한 숫자 데이터타입은 @NotNull로 유효성 검증
-        Long userId
+        String boardType
 ) {}
