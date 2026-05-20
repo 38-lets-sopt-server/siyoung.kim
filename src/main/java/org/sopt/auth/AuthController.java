@@ -57,7 +57,7 @@ public class AuthController {
         }
 
         Long userId = Long.parseLong(authentication.getName());
-        UserResponse user = authService.getMemberById(userId);
+        UserResponse user = authService.getUserById(userId);
 
         return BaseResponse.success(
                 SuccessCode.SUCCESS_OK,

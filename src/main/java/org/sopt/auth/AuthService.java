@@ -11,6 +11,7 @@ import org.sopt.global.jwt.RefreshTokenRepository;
 import org.sopt.global.jwt.TokenResponse;
 import org.sopt.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,8 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtService jwtService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Value("${security.jwt.refresh-token-expires-in-seconds:1209600}")
     private long refreshTokenExpiresInSeconds;
 
@@ -30,7 +33,8 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(ErrorCode.LOGIN_FAILED));
 
-        if (!user.getPassword().equals(password)) {
+        // passwordEncoder 로 password 비교 방식으로 변경
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BaseException(ErrorCode.LOGIN_FAILED);
         }
 
@@ -54,7 +58,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponse getMemberById(Long userId) {
+    public UserResponse getUserById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
         return UserResponse.from(user);
