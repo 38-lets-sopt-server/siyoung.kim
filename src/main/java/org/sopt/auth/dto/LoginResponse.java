@@ -1,4 +1,4 @@
-package org.sopt.auth;
+package org.sopt.auth.dto;
 
 import org.sopt.global.jwt.TokenResponse;
 

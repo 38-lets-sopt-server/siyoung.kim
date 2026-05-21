@@ -1,5 +1,6 @@
-package org.sopt.global.jwt;
+package org.sopt.global.jwt.repository;
 
+import org.sopt.global.jwt.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package org.sopt.auth;
+package org.sopt.auth.dto;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;

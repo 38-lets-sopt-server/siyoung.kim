@@ -1,4 +1,4 @@
-package org.sopt.global.jwt;
+package org.sopt.global.jwt.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
