@@ -3,17 +3,21 @@ package org.sopt.auth;
 import lombok.RequiredArgsConstructor;
 import org.sopt.global.common.code.ErrorCode;
 import org.sopt.global.exception.BaseException;
+import org.sopt.global.jwt.entity.AccessTokenBlacklist;
+import org.sopt.global.jwt.repository.AccessTokenBlacklistRepository;
 import org.sopt.user.entity.User;
 import org.sopt.user.dto.response.UserResponse;
 import org.sopt.global.jwt.JwtService;
-import org.sopt.global.jwt.RefreshToken;
-import org.sopt.global.jwt.RefreshTokenRepository;
+import org.sopt.global.jwt.entity.RefreshToken;
+import org.sopt.global.jwt.repository.RefreshTokenRepository;
 import org.sopt.global.jwt.TokenResponse;
 import org.sopt.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 
 @Service
@@ -22,6 +26,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AccessTokenBlacklistRepository accessTokenBlacklistRepository;
     private final JwtService jwtService;
 
     private final PasswordEncoder passwordEncoder;
@@ -86,5 +91,21 @@ public class AuthService {
         savedRefreshToken.rotate(newRefreshToken, refreshTokenExpiresInSeconds);
 
         return TokenResponse.of(newAccessToken, newRefreshToken);
+    }
+
+    @Transactional
+    public void logout(Long userId, String accessToken) {
+
+        // refresh token 삭제
+        refreshTokenRepository.deleteByUserId(userId);
+
+        // accessToken 값이 blackList 에 없으면 black list 에 추가해준다
+        if (!accessTokenBlacklistRepository.existsByAccessToken(accessToken)) {
+            LocalDateTime expiresAt = jwtService.getExpiresAt(accessToken);
+
+            accessTokenBlacklistRepository.save(
+                    AccessTokenBlacklist.of(userId, accessToken, expiresAt)
+            );
+        }
     }
 }
