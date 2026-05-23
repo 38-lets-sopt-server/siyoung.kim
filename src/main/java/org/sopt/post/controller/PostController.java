@@ -13,6 +13,7 @@ import org.sopt.global.common.code.SuccessCode;
 import org.sopt.global.common.response.BaseResponse;
 import org.sopt.post.service.PostService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,9 +30,13 @@ public class PostController {
     @PostApiResponses.CreatePost
     @PostMapping
     public ResponseEntity<BaseResponse<CreatePostResponse>> createPost(
+            Authentication authentication,
             @Valid @RequestBody CreatePostRequest request
     ) {
-        CreatePostResponse response = postService.createPost(request);
+        // 이제 spring security 의 authentication 객체를 꺼내서 사용
+        Long userId = Long.parseLong(authentication.getName());
+
+        CreatePostResponse response = postService.createPost(userId, request);
         SuccessCode sc = SuccessCode.SUCCESS_CREATED;
 
         return BaseResponse.success(sc, response);
@@ -71,14 +76,18 @@ public class PostController {
 
     // --------------------------------------
     @PostApiResponses.UpdatePost
-    @PutMapping("/{id}")
+    @PutMapping("/{postId}")
     public ResponseEntity<BaseResponse<PostResponse>> updatePost(
+            Authentication authentication,
+
             @Parameter(description = "수정할 게시글 id", example = "1", required = true)
-            @PathVariable Long id,
+            @PathVariable Long postId,
 
             @Valid @RequestBody UpdatePostRequest request
     ) {
-        PostResponse response = postService.updatePost(id, request);
+        Long userId = Long.parseLong(authentication.getName());
+
+        PostResponse response = postService.updatePost(userId, postId, request);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
 
         return BaseResponse.success(sc, response);
@@ -86,12 +95,16 @@ public class PostController {
 
     // --------------------------------------
     @PostApiResponses.DeletePost
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     public ResponseEntity<BaseResponse<Void>> deletePost(
+            Authentication authentication,
+
             @Parameter(description = "삭제할 게시글 id", example = "1", required = true)
-            @PathVariable Long id
+            @PathVariable Long postId
     ) {
-        postService.deletePost(id);
+        Long userId =  Long.parseLong(authentication.getName());
+
+        postService.deletePost(userId, postId);
         SuccessCode sc = SuccessCode.SUCCESS_OK;
         return BaseResponse.success(sc);
 

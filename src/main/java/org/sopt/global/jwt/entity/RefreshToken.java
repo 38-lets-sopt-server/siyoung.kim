@@ -1,4 +1,4 @@
-package org.sopt.global.jwt;
+package org.sopt.global.jwt.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,7 +17,7 @@ public class RefreshToken {
     private Long id;
 
     @Column(nullable = false)
-    private Long memberId;
+    private Long userId;
 
     @Column(nullable = false, unique = true)
     private String token;
@@ -25,15 +25,15 @@ public class RefreshToken {
     @Column(nullable = false)
     private LocalDateTime expiresAt;
 
-    private RefreshToken(Long memberId, String token, LocalDateTime expiresAt) {
-        this.memberId = memberId;
+    private RefreshToken(Long userId, String token, LocalDateTime expiresAt) {
+        this.userId = userId;
         this.token = token;
         this.expiresAt = expiresAt;
     }
 
-    public static RefreshToken of(Long memberId, String token, long expiresInSeconds) {
+    public static RefreshToken of(Long userId, String token, long expiresInSeconds) {
         return new RefreshToken(
-                memberId,
+                userId,
                 token,
                 LocalDateTime.now().plusSeconds(expiresInSeconds)
         );

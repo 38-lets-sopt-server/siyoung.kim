@@ -1,5 +1,6 @@
 package org.sopt.post.service;
 
+import lombok.RequiredArgsConstructor;
 import org.sopt.post.entity.BoardType;
 import org.sopt.post.entity.Post;
 import org.sopt.user.entity.User;
@@ -23,18 +24,15 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
 
     @Transactional
-    public CreatePostResponse createPost(CreatePostRequest request) {
+    public CreatePostResponse createPost(Long userId, CreatePostRequest request) {
 
         // board 를 지정하지 않았을 때
         if(request.boardType() == null || request.boardType().isBlank()) {
@@ -44,7 +42,7 @@ public class PostService {
         // 존재하지 않는 board를 보냈을 때 BoardType 의 from 에서 에러 터지게 만들기
         BoardType boardType = BoardType.from(request.boardType());
 
-        User user = userRepository.findById(request.userId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
         Post post = new Post(
@@ -89,9 +87,15 @@ public class PostService {
     }
 
     @Transactional  // 변경 → 더티 체킹으로 save() 없이 자동 UPDATE, 현재는 없지만 권한 체크 구현 필요
-    public PostResponse updatePost(Long id, UpdatePostRequest request) {
-        Post post = postRepository.findById(id)
+    public PostResponse updatePost(Long userId, Long postId, UpdatePostRequest request) {
+
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException());
+
+        // 만약 작성자가 아니라면 403 권한없음 에러 보내기
+        if(!post.getUser().getId().equals(userId)) {
+            throw new BaseException(ErrorCode.FORBIDDEN);
+        }
 
         post.update(request.title(), request.content());
 
@@ -102,9 +106,14 @@ public class PostService {
     // DELETE posts/{id}
     // 현재는 없지만 권한 체크 구현 필요
     @Transactional
-    public void deletePost(Long id) {
-        Post post = postRepository.findById(id)
+    public void deletePost(Long userId, Long postId) {
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException());
+
+        // 만약 작성자가 아니라면 403 권한없음 에러 보내기
+        if(!post.getUser().getId().equals(userId)) {
+            throw new BaseException(ErrorCode.FORBIDDEN);
+        }
 
         postRepository.delete(post);
     }

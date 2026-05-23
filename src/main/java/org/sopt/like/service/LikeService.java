@@ -1,5 +1,6 @@
 package org.sopt.like.service;
 
+import lombok.RequiredArgsConstructor;
 import org.sopt.like.entity.Like;
 import org.sopt.post.entity.Post;
 import org.sopt.user.entity.User;
@@ -13,18 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class LikeService {
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
-    public LikeService(LikeRepository likeRepository,
-                       PostRepository postRepository,
-                       UserRepository userRepository) {
-        this.likeRepository = likeRepository;
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
 
     // 좋아요 추가
     @Transactional
@@ -45,7 +39,7 @@ public class LikeService {
 
     // 좋아요 취소
     @Transactional
-    public void unlikePost(Long postId, Long userId) {
+    public void cancelLike(Long postId, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 

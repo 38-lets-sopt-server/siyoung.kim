@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 //jwt 토큰 만드는 로직
@@ -56,5 +58,14 @@ public class JwtService {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("JWT의 회원 정보가 올바르지 않습니다.");
         }
+    }
+
+    public LocalDateTime getExpiresAt(String token) {
+        DecodedJWT jwt = JWT.require(algorithm).build().verify(token);
+
+        return jwt.getExpiresAt()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 }
